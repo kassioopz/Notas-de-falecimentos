@@ -1,3 +1,6 @@
+import 'package:notas_de_falecimentos/components/widget_to_image.dart';
+import 'package:notas_de_falecimentos/custom_code/widgets/new_custom_widget.dart';
+
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
@@ -39,13 +42,14 @@ class NovopostWidget extends StatefulWidget {
   State<NovopostWidget> createState() => _NovopostWidgetState();
 }
 
-class _NovopostWidgetState extends State<NovopostWidget>
-    with TickerProviderStateMixin {
+class _NovopostWidgetState extends State<NovopostWidget> with TickerProviderStateMixin {
   late NovopostModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late StreamSubscription<bool> _keyboardVisibilitySubscription;
   bool _isKeyboardVisible = false;
+  late GlobalKey _globalKey;
+  final printService = PrintService();
 
   final animationsMap = <String, AnimationInfo>{};
 
@@ -69,8 +73,7 @@ class _NovopostWidgetState extends State<NovopostWidget>
     });
 
     if (!isWeb) {
-      _keyboardVisibilitySubscription =
-          KeyboardVisibilityController().onChange.listen((bool visible) {
+      _keyboardVisibilitySubscription = KeyboardVisibilityController().onChange.listen((bool visible) {
         setState(() {
           _isKeyboardVisible = visible;
         });
@@ -162,7 +165,7 @@ class _NovopostWidgetState extends State<NovopostWidget>
           if (!snapshot.hasData) {
             return Scaffold(
               backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-              body: Center(
+              body: const Center(
                 child: SizedBox(
                   width: 12.0,
                   height: 12.0,
@@ -178,9 +181,8 @@ class _NovopostWidgetState extends State<NovopostWidget>
           List<UsersRecord> novopostUsersRecordList = snapshot.data!;
 
           return GestureDetector(
-            onTap: () => _model.unfocusNode.canRequestFocus
-                ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-                : FocusScope.of(context).unfocus(),
+            onTap: () =>
+                _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
             child: Scaffold(
               key: scaffoldKey,
               backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -195,7 +197,7 @@ class _NovopostWidgetState extends State<NovopostWidget>
                   onTap: () async {
                     context.goNamed('Feed');
                   },
-                  child: Icon(
+                  child: const Icon(
                     Icons.close_rounded,
                     color: Colors.black,
                     size: 24.0,
@@ -211,8 +213,7 @@ class _NovopostWidgetState extends State<NovopostWidget>
                 ),
                 actions: [
                   Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 15.0, 0.0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 15.0, 0.0),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [
@@ -223,7 +224,7 @@ class _NovopostWidgetState extends State<NovopostWidget>
                           builder: (context, snapshot) {
                             // Customize what your widget looks like when it's loading.
                             if (!snapshot.hasData) {
-                              return Center(
+                              return const Center(
                                 child: SizedBox(
                                   width: 12.0,
                                   height: 12.0,
@@ -235,25 +236,20 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                 ),
                               );
                             }
-                            List<PostsRecord> textPostsRecordList =
-                                snapshot.data!;
+                            List<PostsRecord> textPostsRecordList = snapshot.data!;
 
                             // Return an empty Container when the item does not exist.
                             if (snapshot.data!.isEmpty) {
                               return Container();
                             }
-                            final textPostsRecord =
-                                textPostsRecordList.isNotEmpty
-                                    ? textPostsRecordList.first
-                                    : null;
+                            final textPostsRecord = textPostsRecordList.isNotEmpty ? textPostsRecordList.first : null;
                             return InkWell(
                               splashColor: Colors.transparent,
                               focusColor: Colors.transparent,
                               hoverColor: Colors.transparent,
                               highlightColor: Colors.transparent,
                               onTap: () async {
-                                var postsRecordReference =
-                                    PostsRecord.collection.doc();
+                                var postsRecordReference = PostsRecord.collection.doc();
                                 await postsRecordReference.set({
                                   ...createPostsRecordData(
                                     postUser: currentUserReference,
@@ -261,12 +257,9 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                     numComments: 0,
                                     postCaption: _model.textController1.text,
                                     location: FFAppState().location,
-                                    callToActionEnabled:
-                                        FFAppState().calltoactionenabled,
-                                    callToActionText:
-                                        FFAppState().calltoactiontext,
-                                    callToActionLink:
-                                        FFAppState().calltoactionurl,
+                                    callToActionEnabled: FFAppState().calltoactionenabled,
+                                    callToActionText: FFAppState().calltoactiontext,
+                                    callToActionLink: FFAppState().calltoactionurl,
                                     labels: FFAppState().imageLabels,
                                     deleted: false,
                                   ),
@@ -284,12 +277,9 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                     numComments: 0,
                                     postCaption: _model.textController1.text,
                                     location: FFAppState().location,
-                                    callToActionEnabled:
-                                        FFAppState().calltoactionenabled,
-                                    callToActionText:
-                                        FFAppState().calltoactiontext,
-                                    callToActionLink:
-                                        FFAppState().calltoactionurl,
+                                    callToActionEnabled: FFAppState().calltoactionenabled,
+                                    callToActionText: FFAppState().calltoactiontext,
+                                    callToActionLink: FFAppState().calltoactionurl,
                                     labels: FFAppState().imageLabels,
                                     deleted: false,
                                   ),
@@ -307,29 +297,22 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                     content: Text(
                                       'Sucesso',
                                       style: TextStyle(
-                                        color: FlutterFlowTheme.of(context)
-                                            .success,
+                                        color: FlutterFlowTheme.of(context).success,
                                       ),
                                     ),
-                                    duration: Duration(milliseconds: 4000),
-                                    backgroundColor:
-                                        FlutterFlowTheme.of(context)
-                                            .primaryBtnText,
+                                    duration: const Duration(milliseconds: 4000),
+                                    backgroundColor: FlutterFlowTheme.of(context).primaryBtnText,
                                   ),
                                 );
                                 triggerPushNotification(
                                   notificationTitle: currentUserDisplayName,
-                                  notificationText:
-                                      textPostsRecord!.postCaption,
-                                  notificationImageUrl:
-                                      textPostsRecord?.postFotos?.first,
+                                  notificationText: textPostsRecord!.postCaption,
+                                  notificationImageUrl: textPostsRecord.postFotos.first,
                                   notificationSound: 'default',
-                                  userRefs: novopostUsersRecordList
-                                      .map((e) => e.reference)
-                                      .toList(),
+                                  userRefs: novopostUsersRecordList.map((e) => e.reference).toList(),
                                   initialPageName: 'postDetalhes',
                                   parameterData: {
-                                    'post': textPostsRecord?.reference,
+                                    'post': textPostsRecord.reference,
                                   },
                                 );
 
@@ -339,12 +322,9 @@ class _NovopostWidgetState extends State<NovopostWidget>
                               },
                               child: Text(
                                 'Compartilhar',
-                                style: FlutterFlowTheme.of(context)
-                                    .titleMedium
-                                    .override(
+                                style: FlutterFlowTheme.of(context).titleMedium.override(
                                       fontFamily: 'Inter',
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondary,
+                                      color: FlutterFlowTheme.of(context).secondary,
                                       fontSize: 16.0,
                                       letterSpacing: 0.0,
                                       fontWeight: FontWeight.w500,
@@ -369,46 +349,40 @@ class _NovopostWidgetState extends State<NovopostWidget>
                       Container(
                         width: double.infinity,
                         height: 0.5,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Color(0xFFDADADA),
                         ),
                       ),
                       Builder(
                         builder: (context) {
-                          final imgfotos =
-                              FFAppState().imgfotos.map((e) => e).toList();
+                          final imgfotos = FFAppState().imgfotos.map((e) => e).toList();
 
                           return SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: List.generate(imgfotos.length,
-                                  (imgfotosIndex) {
+                              children: List.generate(imgfotos.length, (imgfotosIndex) {
                                 final imgfotosItem = imgfotos[imgfotosIndex];
                                 return Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      20.0, 0.0, 0.0, 0.0),
+                                  padding: const EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 0.0, 0.0),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 16.0, 0.0, 16.0),
+                                        padding: const EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 16.0),
                                         child: Container(
                                           width: 100.0,
                                           height: 100.0,
                                           decoration: BoxDecoration(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryBackground,
+                                            color: FlutterFlowTheme.of(context).primaryBackground,
                                             image: DecorationImage(
                                               fit: BoxFit.cover,
                                               image: Image.network(
                                                 '',
                                               ).image,
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
+                                            borderRadius: BorderRadius.circular(8.0),
                                           ),
                                           child: Stack(
                                             children: [
@@ -416,16 +390,13 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                                 splashColor: Colors.transparent,
                                                 focusColor: Colors.transparent,
                                                 hoverColor: Colors.transparent,
-                                                highlightColor:
-                                                    Colors.transparent,
+                                                highlightColor: Colors.transparent,
                                                 onTap: () async {
                                                   await Navigator.push(
                                                     context,
                                                     PageTransition(
-                                                      type: PageTransitionType
-                                                          .fade,
-                                                      child:
-                                                          FlutterFlowExpandedImageView(
+                                                      type: PageTransitionType.fade,
+                                                      child: FlutterFlowExpandedImageView(
                                                         image: Image.network(
                                                           imgfotosItem,
                                                           fit: BoxFit.contain,
@@ -439,12 +410,9 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                                 },
                                                 child: Hero(
                                                   tag: imgfotosItem,
-                                                  transitionOnUserGestures:
-                                                      true,
+                                                  transitionOnUserGestures: true,
                                                   child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
+                                                    borderRadius: BorderRadius.circular(8.0),
                                                     child: Image.network(
                                                       imgfotosItem,
                                                       width: 300.0,
@@ -455,33 +423,20 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                                 ),
                                               ),
                                               Align(
-                                                alignment: AlignmentDirectional(
-                                                    1.0, -1.0),
+                                                alignment: const AlignmentDirectional(1.0, -1.0),
                                                 child: InkWell(
-                                                  splashColor:
-                                                      Colors.transparent,
-                                                  focusColor:
-                                                      Colors.transparent,
-                                                  hoverColor:
-                                                      Colors.transparent,
-                                                  highlightColor:
-                                                      Colors.transparent,
+                                                  splashColor: Colors.transparent,
+                                                  focusColor: Colors.transparent,
+                                                  hoverColor: Colors.transparent,
+                                                  highlightColor: Colors.transparent,
                                                   onTap: () async {
-                                                    await FirebaseStorage
-                                                        .instance
-                                                        .refFromURL(
-                                                            imgfotosItem)
-                                                        .delete();
-                                                    FFAppState()
-                                                        .removeFromImgfotos(
-                                                            imgfotosItem);
+                                                    await FirebaseStorage.instance.refFromURL(imgfotosItem).delete();
+                                                    FFAppState().removeFromImgfotos(imgfotosItem);
                                                     setState(() {});
                                                   },
                                                   child: FaIcon(
                                                     FontAwesomeIcons.trashAlt,
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .secondaryText,
+                                                    color: FlutterFlowTheme.of(context).secondaryText,
                                                     size: 24.0,
                                                   ),
                                                 ),
@@ -498,37 +453,32 @@ class _NovopostWidgetState extends State<NovopostWidget>
                           );
                         },
                       ),
-                      if (FFAppState().imgfotos.length < 1)
+                      if (FFAppState().imgfotos.isEmpty)
                         Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              23.0, 16.0, 22.0, 16.0),
+                          padding: const EdgeInsetsDirectional.fromSTEB(23.0, 16.0, 22.0, 16.0),
                           child: Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              color: Color(0xFFEEEEEE),
+                              color: const Color(0xFFEEEEEE),
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  5.0, 12.0, 5.0, 12.0),
+                              padding: const EdgeInsetsDirectional.fromSTEB(5.0, 12.0, 5.0, 12.0),
                               child: Column(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.cloud_upload_outlined,
                                     color: Color(0xFF3CB371),
                                     size: 30.0,
                                   ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 8.0),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 8.0),
                                     child: Text(
                                       'Imagem da nota de falecimento',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
+                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
                                             fontFamily: 'Inter',
-                                            color: Color(0xFF3CB371),
+                                            color: const Color(0xFF3CB371),
                                             fontSize: 12.0,
                                             letterSpacing: 0.0,
                                             fontWeight: FontWeight.w500,
@@ -536,16 +486,12 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 12.0),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
                                     child: Text(
                                       'Suporta PNG, JPG e JPEG',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
+                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
                                             fontFamily: 'Inter',
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryText,
+                                            color: FlutterFlowTheme.of(context).secondaryText,
                                             fontSize: 12.0,
                                             letterSpacing: 0.0,
                                             fontWeight: FontWeight.normal,
@@ -567,14 +513,9 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                         mediaSource: MediaSource.photoGallery,
                                         multiImage: true,
                                       );
-                                      if (selectedMedia != null &&
-                                          selectedMedia.every((m) =>
-                                              validateFileFormat(
-                                                  m.storagePath, context))) {
-                                        setState(() =>
-                                            _model.isDataUploading1 = true);
-                                        var selectedUploadedFiles =
-                                            <FFUploadedFile>[];
+                                      if (selectedMedia != null && selectedMedia.every((m) => validateFileFormat(m.storagePath, context))) {
+                                        setState(() => _model.isDataUploading1 = true);
+                                        var selectedUploadedFiles = <FFUploadedFile>[];
 
                                         var downloadUrls = <String>[];
                                         try {
@@ -585,12 +526,9 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                           );
                                           selectedUploadedFiles = selectedMedia
                                               .map((m) => FFUploadedFile(
-                                                    name: m.storagePath
-                                                        .split('/')
-                                                        .last,
+                                                    name: m.storagePath.split('/').last,
                                                     bytes: m.bytes,
-                                                    height:
-                                                        m.dimensions?.height,
+                                                    height: m.dimensions?.height,
                                                     width: m.dimensions?.width,
                                                     blurHash: m.blurHash,
                                                   ))
@@ -598,43 +536,31 @@ class _NovopostWidgetState extends State<NovopostWidget>
 
                                           downloadUrls = (await Future.wait(
                                             selectedMedia.map(
-                                              (m) async => await uploadData(
-                                                  m.storagePath, m.bytes),
+                                              (m) async => await uploadData(m.storagePath, m.bytes),
                                             ),
                                           ))
                                               .where((u) => u != null)
                                               .map((u) => u!)
                                               .toList();
                                         } finally {
-                                          ScaffoldMessenger.of(context)
-                                              .hideCurrentSnackBar();
+                                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                           _model.isDataUploading1 = false;
                                         }
-                                        if (selectedUploadedFiles.length ==
-                                                selectedMedia.length &&
-                                            downloadUrls.length ==
-                                                selectedMedia.length) {
+                                        if (selectedUploadedFiles.length == selectedMedia.length && downloadUrls.length == selectedMedia.length) {
                                           setState(() {
-                                            _model.uploadedLocalFiles1 =
-                                                selectedUploadedFiles;
-                                            _model.uploadedFileUrls1 =
-                                                downloadUrls;
+                                            _model.uploadedLocalFiles1 = selectedUploadedFiles;
+                                            _model.uploadedFileUrls1 = downloadUrls;
                                           });
-                                          showUploadMessage(
-                                              context, 'Success!');
+                                          showUploadMessage(context, 'Success!');
                                         } else {
                                           setState(() {});
-                                          showUploadMessage(
-                                              context, 'Failed to upload data');
+                                          showUploadMessage(context, 'Failed to upload data');
                                           return;
                                         }
                                       }
 
-                                      if (_model.uploadedFileUrls1.length > 0) {
-                                        FFAppState().imgfotos = _model
-                                            .uploadedFileUrls1
-                                            .toList()
-                                            .cast<String>();
+                                      if (_model.uploadedFileUrls1.isNotEmpty) {
+                                        FFAppState().imgfotos = _model.uploadedFileUrls1.toList().cast<String>();
                                         setState(() {});
                                       }
                                     },
@@ -642,15 +568,10 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                     options: FFButtonOptions(
                                       width: 155.0,
                                       height: 35.0,
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 0.0),
-                                      iconPadding:
-                                          EdgeInsetsDirectional.fromSTEB(
-                                              0.0, 0.0, 0.0, 0.0),
-                                      color: Color(0xFF3CB371),
-                                      textStyle: FlutterFlowTheme.of(context)
-                                          .labelSmall
-                                          .override(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                      iconPadding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                      color: const Color(0xFF3CB371),
+                                      textStyle: FlutterFlowTheme.of(context).labelSmall.override(
                                             fontFamily: 'Inter',
                                             color: Colors.white,
                                             fontSize: 16.0,
@@ -658,7 +579,7 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                             fontWeight: FontWeight.w500,
                                           ),
                                       elevation: 3.0,
-                                      borderSide: BorderSide(
+                                      borderSide: const BorderSide(
                                         color: Colors.transparent,
                                         width: 1.0,
                                       ),
@@ -670,37 +591,32 @@ class _NovopostWidgetState extends State<NovopostWidget>
                             ),
                           ),
                         ),
-                      if (FFAppState().imgfotos.length > 0)
+                      if (FFAppState().imgfotos.isNotEmpty)
                         Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              23.0, 16.0, 22.0, 16.0),
+                          padding: const EdgeInsetsDirectional.fromSTEB(23.0, 16.0, 22.0, 16.0),
                           child: Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              color: Color(0xFFEEEEEE),
+                              color: const Color(0xFFEEEEEE),
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  5.0, 12.0, 5.0, 12.0),
+                              padding: const EdgeInsetsDirectional.fromSTEB(5.0, 12.0, 5.0, 12.0),
                               child: Column(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.cloud_upload_outlined,
                                     color: Color(0xFF3CB371),
                                     size: 30.0,
                                   ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 8.0),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 8.0),
                                     child: Text(
                                       'Imagem da nota de falecimento',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
+                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
                                             fontFamily: 'Inter',
-                                            color: Color(0xFF3CB371),
+                                            color: const Color(0xFF3CB371),
                                             fontSize: 12.0,
                                             letterSpacing: 0.0,
                                             fontWeight: FontWeight.w500,
@@ -708,16 +624,12 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 12.0),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
                                     child: Text(
                                       'Suporta PNG, JPG e JPEG',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
+                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
                                             fontFamily: 'Inter',
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryText,
+                                            color: FlutterFlowTheme.of(context).secondaryText,
                                             fontSize: 12.0,
                                             letterSpacing: 0.0,
                                             fontWeight: FontWeight.normal,
@@ -739,14 +651,9 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                         mediaSource: MediaSource.photoGallery,
                                         multiImage: false,
                                       );
-                                      if (selectedMedia != null &&
-                                          selectedMedia.every((m) =>
-                                              validateFileFormat(
-                                                  m.storagePath, context))) {
-                                        setState(() =>
-                                            _model.isDataUploading2 = true);
-                                        var selectedUploadedFiles =
-                                            <FFUploadedFile>[];
+                                      if (selectedMedia != null && selectedMedia.every((m) => validateFileFormat(m.storagePath, context))) {
+                                        setState(() => _model.isDataUploading2 = true);
+                                        var selectedUploadedFiles = <FFUploadedFile>[];
 
                                         var downloadUrls = <String>[];
                                         try {
@@ -757,12 +664,9 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                           );
                                           selectedUploadedFiles = selectedMedia
                                               .map((m) => FFUploadedFile(
-                                                    name: m.storagePath
-                                                        .split('/')
-                                                        .last,
+                                                    name: m.storagePath.split('/').last,
                                                     bytes: m.bytes,
-                                                    height:
-                                                        m.dimensions?.height,
+                                                    height: m.dimensions?.height,
                                                     width: m.dimensions?.width,
                                                     blurHash: m.blurHash,
                                                   ))
@@ -770,42 +674,31 @@ class _NovopostWidgetState extends State<NovopostWidget>
 
                                           downloadUrls = (await Future.wait(
                                             selectedMedia.map(
-                                              (m) async => await uploadData(
-                                                  m.storagePath, m.bytes),
+                                              (m) async => await uploadData(m.storagePath, m.bytes),
                                             ),
                                           ))
                                               .where((u) => u != null)
                                               .map((u) => u!)
                                               .toList();
                                         } finally {
-                                          ScaffoldMessenger.of(context)
-                                              .hideCurrentSnackBar();
+                                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                           _model.isDataUploading2 = false;
                                         }
-                                        if (selectedUploadedFiles.length ==
-                                                selectedMedia.length &&
-                                            downloadUrls.length ==
-                                                selectedMedia.length) {
+                                        if (selectedUploadedFiles.length == selectedMedia.length && downloadUrls.length == selectedMedia.length) {
                                           setState(() {
-                                            _model.uploadedLocalFile2 =
-                                                selectedUploadedFiles.first;
-                                            _model.uploadedFileUrl2 =
-                                                downloadUrls.first;
+                                            _model.uploadedLocalFile2 = selectedUploadedFiles.first;
+                                            _model.uploadedFileUrl2 = downloadUrls.first;
                                           });
-                                          showUploadMessage(
-                                              context, 'Success!');
+                                          showUploadMessage(context, 'Success!');
                                         } else {
                                           setState(() {});
-                                          showUploadMessage(
-                                              context, 'Failed to upload data');
+                                          showUploadMessage(context, 'Failed to upload data');
                                           return;
                                         }
                                       }
 
-                                      if (_model.uploadedFileUrl2 != null &&
-                                          _model.uploadedFileUrl2 != '') {
-                                        FFAppState().addToImgfotos(
-                                            _model.uploadedFileUrl2);
+                                      if (_model.uploadedFileUrl2 != '') {
+                                        FFAppState().addToImgfotos(_model.uploadedFileUrl2);
                                         setState(() {});
                                       }
                                     },
@@ -813,15 +706,10 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                     options: FFButtonOptions(
                                       width: 155.0,
                                       height: 35.0,
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 0.0),
-                                      iconPadding:
-                                          EdgeInsetsDirectional.fromSTEB(
-                                              0.0, 0.0, 0.0, 0.0),
-                                      color: Color(0xFF3CB371),
-                                      textStyle: FlutterFlowTheme.of(context)
-                                          .labelSmall
-                                          .override(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                      iconPadding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                      color: const Color(0xFF3CB371),
+                                      textStyle: FlutterFlowTheme.of(context).labelSmall.override(
                                             fontFamily: 'Inter',
                                             color: Colors.white,
                                             fontSize: 16.0,
@@ -829,7 +717,7 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                             fontWeight: FontWeight.w500,
                                           ),
                                       elevation: 3.0,
-                                      borderSide: BorderSide(
+                                      borderSide: const BorderSide(
                                         color: Colors.transparent,
                                         width: 1.0,
                                       ),
@@ -842,20 +730,18 @@ class _NovopostWidgetState extends State<NovopostWidget>
                           ),
                         ),
                       Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            10.0, 0.0, 10.0, 0.0),
+                        padding: const EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
                         child: Container(
                           width: double.infinity,
                           height: 120.0,
                           decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
+                            color: FlutterFlowTheme.of(context).secondaryBackground,
                             borderRadius: BorderRadius.circular(0.0),
                           ),
                           child: Align(
-                            alignment: AlignmentDirectional(0.0, 0.0),
+                            alignment: const AlignmentDirectional(0.0, 0.0),
                             child: Padding(
-                              padding: EdgeInsets.all(15.0),
+                              padding: const EdgeInsets.all(15.0),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -869,9 +755,7 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                       decoration: InputDecoration(
                                         isDense: false,
                                         labelText: 'Escreva uma descrição...',
-                                        labelStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
+                                        labelStyle: FlutterFlowTheme.of(context).bodyMedium.override(
                                               fontFamily: 'Inter',
                                               fontSize: 14.0,
                                               letterSpacing: 0.0,
@@ -879,15 +763,13 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                               lineHeight: 1.5,
                                             ),
                                         alignLabelWithHint: false,
-                                        hintStyle: FlutterFlowTheme.of(context)
-                                            .bodySmall
-                                            .override(
+                                        hintStyle: FlutterFlowTheme.of(context).bodySmall.override(
                                               fontFamily: 'Inter',
                                               fontSize: 14.0,
                                               letterSpacing: 0.0,
                                               fontWeight: FontWeight.normal,
                                             ),
-                                        enabledBorder: OutlineInputBorder(
+                                        enabledBorder: const OutlineInputBorder(
                                           borderSide: BorderSide(
                                             color: Colors.black,
                                             width: 1.0,
@@ -899,7 +781,7 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                             topRight: Radius.circular(4.0),
                                           ),
                                         ),
-                                        focusedBorder: OutlineInputBorder(
+                                        focusedBorder: const OutlineInputBorder(
                                           borderSide: BorderSide(
                                             color: Colors.black,
                                             width: 1.0,
@@ -913,11 +795,10 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                         ),
                                         errorBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
+                                            color: FlutterFlowTheme.of(context).error,
                                             width: 1.0,
                                           ),
-                                          borderRadius: BorderRadius.only(
+                                          borderRadius: const BorderRadius.only(
                                             bottomLeft: Radius.circular(4.0),
                                             bottomRight: Radius.circular(4.0),
                                             topLeft: Radius.circular(4.0),
@@ -926,11 +807,10 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                         ),
                                         focusedErrorBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
+                                            color: FlutterFlowTheme.of(context).error,
                                             width: 1.0,
                                           ),
-                                          borderRadius: BorderRadius.only(
+                                          borderRadius: const BorderRadius.only(
                                             bottomLeft: Radius.circular(4.0),
                                             bottomRight: Radius.circular(4.0),
                                             topLeft: Radius.circular(4.0),
@@ -938,9 +818,7 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                           ),
                                         ),
                                       ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
+                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
                                             fontFamily: 'Inter',
                                             fontSize: 14.0,
                                             letterSpacing: 0.0,
@@ -948,8 +826,7 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                             lineHeight: 1.5,
                                           ),
                                       maxLines: 10,
-                                      validator: _model.textController1Validator
-                                          .asValidator(context),
+                                      validator: _model.textController1Validator.asValidator(context),
                                     ),
                                   ),
                                 ],
@@ -964,12 +841,10 @@ class _NovopostWidgetState extends State<NovopostWidget>
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 10.0, 0.0, 10.0),
+                                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 10.0),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
                                     InkWell(
                                       splashColor: Colors.transparent,
@@ -977,27 +852,23 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                       hoverColor: Colors.transparent,
                                       highlightColor: Colors.transparent,
                                       onTap: () async {
-                                        FFAppState().catainerimagee =
-                                            _model.container;
+                                        FFAppState().catainerimagee = _model.container;
                                         setState(() {});
                                       },
                                       child: Container(
                                         width: 50.0,
                                         height: 50.0,
                                         decoration: BoxDecoration(
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
+                                          color: FlutterFlowTheme.of(context).secondaryBackground,
                                           image: DecorationImage(
                                             fit: BoxFit.contain,
                                             image: Image.network(
                                               _model.container,
                                             ).image,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(4.0),
+                                          borderRadius: BorderRadius.circular(4.0),
                                           border: Border.all(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color: FlutterFlowTheme.of(context).primaryText,
                                           ),
                                         ),
                                       ),
@@ -1008,27 +879,23 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                       hoverColor: Colors.transparent,
                                       highlightColor: Colors.transparent,
                                       onTap: () async {
-                                        FFAppState().catainerimagee =
-                                            _model.container2;
+                                        FFAppState().catainerimagee = _model.container2;
                                         setState(() {});
                                       },
                                       child: Container(
                                         width: 50.0,
                                         height: 50.0,
                                         decoration: BoxDecoration(
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
+                                          color: FlutterFlowTheme.of(context).secondaryBackground,
                                           image: DecorationImage(
                                             fit: BoxFit.contain,
                                             image: Image.network(
                                               _model.container2,
                                             ).image,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(4.0),
+                                          borderRadius: BorderRadius.circular(4.0),
                                           border: Border.all(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color: FlutterFlowTheme.of(context).primaryText,
                                           ),
                                         ),
                                       ),
@@ -1040,409 +907,285 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        5.0, 0.0, 5.0, 0.0),
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: 500.0,
-                                      decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryBackground,
-                                        image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: Image.network(
-                                            FFAppState().catainerimagee,
-                                          ).image,
-                                        ),
-                                      ),
-                                      child: Stack(
-                                        children: [
-                                          if (FFAppState().catainerimagee ==
-                                              _model.container)
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  0.0, -0.5),
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(0.0),
-                                                child: Image.network(
-                                                  _model.uploadedFileUrl3,
-                                                  width: 209.0,
-                                                  height: 242.0,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                          Align(
-                                            alignment: AlignmentDirectional(
-                                                -0.65, -0.64),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(0.0),
-                                              child: Image.network(
-                                                _model.uploadedFileUrl4,
-                                                width: 120.0,
-                                                height: 140.0,
-                                                fit: BoxFit.cover,
-                                              ),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(5.0, 0.0, 5.0, 0.0),
+                                    child: WidgetToImageTeste(
+                                      builder: (globalKey) {
+                                        _globalKey = globalKey;
+                                        return Container(
+                                          width: double.infinity,
+                                          height: 500.0,
+                                          decoration: BoxDecoration(
+                                            color: FlutterFlowTheme.of(context).secondaryBackground,
+                                            image: DecorationImage(
+                                              fit: BoxFit.cover,
+                                              image: Image.network(
+                                                FFAppState().catainerimagee,
+                                              ).image,
                                             ),
                                           ),
-                                          Align(
-                                            alignment: AlignmentDirectional(
-                                                0.03, 0.47),
-                                            child: RichText(
-                                              textScaler: MediaQuery.of(context)
-                                                  .textScaler,
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: _model
-                                                        .textController9.text,
-                                                    style: TextStyle(
-                                                      color: Color(0xFF54400B),
+                                          child: Stack(
+                                            children: [
+                                              if (FFAppState().catainerimagee == _model.container)
+                                                Align(
+                                                  alignment: const AlignmentDirectional(0.0, -0.5),
+                                                  child: ClipRRect(
+                                                    borderRadius: BorderRadius.circular(0.0),
+                                                    child: Image.network(
+                                                      _model.uploadedFileUrl3,
+                                                      width: 209.0,
+                                                      height: 242.0,
+                                                      fit: BoxFit.cover,
                                                     ),
-                                                  )
-                                                ],
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodySmall
-                                                        .override(
+                                                  ),
+                                                ),
+                                              Align(
+                                                alignment: const AlignmentDirectional(-0.65, -0.64),
+                                                child: ClipRRect(
+                                                  borderRadius: BorderRadius.circular(0.0),
+                                                  child: Image.network(
+                                                    _model.uploadedFileUrl4,
+                                                    width: 120.0,
+                                                    height: 140.0,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment: const AlignmentDirectional(0.03, 0.47),
+                                                child: RichText(
+                                                  textScaler: MediaQuery.of(context).textScaler,
+                                                  text: TextSpan(
+                                                    children: [
+                                                      TextSpan(
+                                                        text: _model.textController9.text,
+                                                        style: const TextStyle(
+                                                          color: Color(0xFF54400B),
+                                                        ),
+                                                      )
+                                                    ],
+                                                    style: FlutterFlowTheme.of(context).bodySmall.override(
                                                           fontFamily: 'Lora',
                                                           fontSize: 15.0,
                                                           letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.bold,
+                                                          fontWeight: FontWeight.bold,
                                                         ),
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 3,
+                                                ),
                                               ),
-                                              textAlign: TextAlign.center,
-                                              maxLines: 3,
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: AlignmentDirectional(
-                                                0.67, -0.22),
-                                            child: RichText(
-                                              textScaler: MediaQuery.of(context)
-                                                  .textScaler,
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: _model
-                                                        .textController7.text,
-                                                    style: TextStyle(
-                                                      color: Color(0xFF54400B),
-                                                    ),
-                                                  )
-                                                ],
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodySmall
-                                                        .override(
+                                              Align(
+                                                alignment: const AlignmentDirectional(0.67, -0.22),
+                                                child: RichText(
+                                                  textScaler: MediaQuery.of(context).textScaler,
+                                                  text: TextSpan(
+                                                    children: [
+                                                      TextSpan(
+                                                        text: _model.textController7.text,
+                                                        style: const TextStyle(
+                                                          color: Color(0xFF54400B),
+                                                        ),
+                                                      )
+                                                    ],
+                                                    style: FlutterFlowTheme.of(context).bodySmall.override(
                                                           fontFamily: 'Lora',
                                                           fontSize: 12.0,
                                                           letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.bold,
+                                                          fontWeight: FontWeight.bold,
                                                         ),
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
                                               ),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: AlignmentDirectional(
-                                                0.02, 0.82),
-                                            child: RichText(
-                                              textScaler: MediaQuery.of(context)
-                                                  .textScaler,
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: _model
-                                                        .textController10.text,
-                                                    style: TextStyle(
-                                                      color: Color(0xFF54400B),
-                                                    ),
-                                                  )
-                                                ],
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodySmall
-                                                        .override(
+                                              Align(
+                                                alignment: const AlignmentDirectional(0.02, 0.82),
+                                                child: RichText(
+                                                  textScaler: MediaQuery.of(context).textScaler,
+                                                  text: TextSpan(
+                                                    children: [
+                                                      TextSpan(
+                                                        text: _model.textController10.text,
+                                                        style: const TextStyle(
+                                                          color: Color(0xFF54400B),
+                                                        ),
+                                                      )
+                                                    ],
+                                                    style: FlutterFlowTheme.of(context).bodySmall.override(
                                                           fontFamily: 'Lora',
                                                           fontSize: 15.0,
                                                           letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.bold,
+                                                          fontWeight: FontWeight.bold,
                                                         ),
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 3,
+                                                ),
                                               ),
-                                              textAlign: TextAlign.center,
-                                              maxLines: 3,
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: AlignmentDirectional(
-                                                0.03, 0.08),
-                                            child: RichText(
-                                              textScaler: MediaQuery.of(context)
-                                                  .textScaler,
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: _model
-                                                        .textController8.text,
-                                                    style: TextStyle(
-                                                      color: Color(0xFF54400B),
-                                                    ),
-                                                  )
-                                                ],
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodySmall
-                                                        .override(
+                                              Align(
+                                                alignment: const AlignmentDirectional(0.03, 0.08),
+                                                child: RichText(
+                                                  textScaler: MediaQuery.of(context).textScaler,
+                                                  text: TextSpan(
+                                                    children: [
+                                                      TextSpan(
+                                                        text: _model.textController8.text,
+                                                        style: const TextStyle(
+                                                          color: Color(0xFF54400B),
+                                                        ),
+                                                      )
+                                                    ],
+                                                    style: FlutterFlowTheme.of(context).bodySmall.override(
                                                           fontFamily: 'Lora',
                                                           fontSize: 15.0,
                                                           letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.bold,
+                                                          fontWeight: FontWeight.bold,
                                                         ),
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 4,
+                                                ),
                                               ),
-                                              textAlign: TextAlign.center,
-                                              maxLines: 4,
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: AlignmentDirectional(
-                                                0.88, -0.5),
-                                            child: Container(
-                                              width: 181.0,
-                                              height: 111.0,
-                                              decoration: BoxDecoration(),
-                                              alignment: AlignmentDirectional(
-                                                  0.0, 0.0),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            -1.0, 0.0),
-                                                    child: RichText(
-                                                      textScaler:
-                                                          MediaQuery.of(context)
-                                                              .textScaler,
-                                                      text: TextSpan(
-                                                        children: [
-                                                          TextSpan(
-                                                            text: _model
-                                                                .textController3
-                                                                .text,
-                                                            style: TextStyle(
-                                                              color: Color(
-                                                                  0xFF54400B),
-                                                            ),
-                                                          )
-                                                        ],
-                                                        style: FlutterFlowTheme
-                                                                .of(context)
-                                                            .bodySmall
-                                                            .override(
-                                                              fontFamily:
-                                                                  'Lora',
-                                                              fontSize: 14.0,
-                                                              letterSpacing:
-                                                                  0.0,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
-                                                      ),
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                      maxLines: 3,
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: RichText(
-                                                      textScaler:
-                                                          MediaQuery.of(context)
-                                                              .textScaler,
-                                                      text: TextSpan(
-                                                        children: [
-                                                          TextSpan(
-                                                            text: _model
-                                                                .textController4
-                                                                .text,
-                                                            style: TextStyle(
-                                                              color: Color(
-                                                                  0xFFBF9D3E),
-                                                            ),
-                                                          )
-                                                        ],
-                                                        style: FlutterFlowTheme
-                                                                .of(context)
-                                                            .bodySmall
-                                                            .override(
-                                                              fontFamily:
-                                                                  'Lora',
-                                                              fontSize: 13.0,
-                                                              letterSpacing:
-                                                                  0.0,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
-                                                      ),
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                      maxLines: 3,
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  10.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      child: Row(
-                                                        mainAxisSize:
-                                                            MainAxisSize.max,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Align(
-                                                            alignment:
-                                                                AlignmentDirectional(
-                                                                    0.2, -0.31),
-                                                            child: RichText(
-                                                              textScaler:
-                                                                  MediaQuery.of(
-                                                                          context)
-                                                                      .textScaler,
-                                                              text: TextSpan(
-                                                                children: [
-                                                                  TextSpan(
-                                                                    text: _model
-                                                                        .textController5
-                                                                        .text,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      color: Color(
-                                                                          0xFF54400B),
-                                                                    ),
-                                                                  )
-                                                                ],
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodySmall
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          'Lora',
-                                                                      fontSize:
-                                                                          10.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                    ),
-                                                              ),
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                            ),
+                                              Align(
+                                                alignment: const AlignmentDirectional(0.88, -0.5),
+                                                child: Container(
+                                                  width: 181.0,
+                                                  height: 111.0,
+                                                  decoration: const BoxDecoration(),
+                                                  alignment: const AlignmentDirectional(0.0, 0.0),
+                                                  child: Column(
+                                                    mainAxisSize: MainAxisSize.max,
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Align(
+                                                        alignment: const AlignmentDirectional(-1.0, 0.0),
+                                                        child: RichText(
+                                                          textScaler: MediaQuery.of(context).textScaler,
+                                                          text: TextSpan(
+                                                            children: [
+                                                              TextSpan(
+                                                                text: _model.textController3.text,
+                                                                style: const TextStyle(
+                                                                  color: Color(0xFF54400B),
+                                                                ),
+                                                              )
+                                                            ],
+                                                            style: FlutterFlowTheme.of(context).bodySmall.override(
+                                                                  fontFamily: 'Lora',
+                                                                  fontSize: 14.0,
+                                                                  letterSpacing: 0.0,
+                                                                  fontWeight: FontWeight.bold,
+                                                                ),
                                                           ),
-                                                          Align(
-                                                            alignment:
-                                                                AlignmentDirectional(
-                                                                    0.73,
-                                                                    -0.31),
-                                                            child: RichText(
-                                                              textScaler:
-                                                                  MediaQuery.of(
-                                                                          context)
-                                                                      .textScaler,
-                                                              text: TextSpan(
-                                                                children: [
-                                                                  TextSpan(
-                                                                    text: _model
-                                                                        .textController6
-                                                                        .text,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      color: Color(
-                                                                          0xFF54400B),
-                                                                    ),
-                                                                  )
-                                                                ],
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodySmall
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          'Lora',
-                                                                      fontSize:
-                                                                          10.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                    ),
-                                                              ),
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                            ),
-                                                          ),
-                                                        ],
+                                                          textAlign: TextAlign.start,
+                                                          maxLines: 3,
+                                                        ),
                                                       ),
-                                                    ),
+                                                      Align(
+                                                        alignment: const AlignmentDirectional(0.0, 0.0),
+                                                        child: RichText(
+                                                          textScaler: MediaQuery.of(context).textScaler,
+                                                          text: TextSpan(
+                                                            children: [
+                                                              TextSpan(
+                                                                text: _model.textController4.text,
+                                                                style: const TextStyle(
+                                                                  color: Color(0xFFBF9D3E),
+                                                                ),
+                                                              )
+                                                            ],
+                                                            style: FlutterFlowTheme.of(context).bodySmall.override(
+                                                                  fontFamily: 'Lora',
+                                                                  fontSize: 13.0,
+                                                                  letterSpacing: 0.0,
+                                                                  fontWeight: FontWeight.bold,
+                                                                ),
+                                                          ),
+                                                          textAlign: TextAlign.start,
+                                                          maxLines: 3,
+                                                        ),
+                                                      ),
+                                                      Align(
+                                                        alignment: const AlignmentDirectional(0.0, 0.0),
+                                                        child: Padding(
+                                                          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                                                          child: Row(
+                                                            mainAxisSize: MainAxisSize.max,
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [
+                                                              Align(
+                                                                alignment: const AlignmentDirectional(0.2, -0.31),
+                                                                child: RichText(
+                                                                  textScaler: MediaQuery.of(context).textScaler,
+                                                                  text: TextSpan(
+                                                                    children: [
+                                                                      TextSpan(
+                                                                        text: _model.textController5.text,
+                                                                        style: const TextStyle(
+                                                                          color: Color(0xFF54400B),
+                                                                        ),
+                                                                      )
+                                                                    ],
+                                                                    style: FlutterFlowTheme.of(context).bodySmall.override(
+                                                                          fontFamily: 'Lora',
+                                                                          fontSize: 10.0,
+                                                                          letterSpacing: 0.0,
+                                                                          fontWeight: FontWeight.bold,
+                                                                        ),
+                                                                  ),
+                                                                  textAlign: TextAlign.center,
+                                                                ),
+                                                              ),
+                                                              Align(
+                                                                alignment: const AlignmentDirectional(0.73, -0.31),
+                                                                child: RichText(
+                                                                  textScaler: MediaQuery.of(context).textScaler,
+                                                                  text: TextSpan(
+                                                                    children: [
+                                                                      TextSpan(
+                                                                        text: _model.textController6.text,
+                                                                        style: const TextStyle(
+                                                                          color: Color(0xFF54400B),
+                                                                        ),
+                                                                      )
+                                                                    ],
+                                                                    style: FlutterFlowTheme.of(context).bodySmall.override(
+                                                                          fontFamily: 'Lora',
+                                                                          fontSize: 10.0,
+                                                                          letterSpacing: 0.0,
+                                                                          fontWeight: FontWeight.bold,
+                                                                        ),
+                                                                  ),
+                                                                  textAlign: TextAlign.center,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ].divide(const SizedBox(height: 8.0)),
                                                   ),
-                                                ].divide(SizedBox(height: 8.0)),
+                                                ),
                                               ),
-                                            ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
+                                        );
+                                      },
                                     ),
                                   ),
-                                  if (FFAppState().catainerimagee ==
-                                      _model.container)
+                                  if (FFAppState().catainerimagee == _model.container)
                                     Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 10.0, 0.0, 0.0),
+                                      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
                                       child: FFButtonWidget(
                                         onPressed: () async {
-                                          final selectedMedia =
-                                              await selectMedia(
+                                          final selectedMedia = await selectMedia(
                                             imageQuality: 100,
-                                            mediaSource:
-                                                MediaSource.photoGallery,
+                                            mediaSource: MediaSource.photoGallery,
                                             multiImage: false,
                                           );
-                                          if (selectedMedia != null &&
-                                              selectedMedia.every((m) =>
-                                                  validateFileFormat(
-                                                      m.storagePath,
-                                                      context))) {
-                                            setState(() =>
-                                                _model.isDataUploading3 = true);
-                                            var selectedUploadedFiles =
-                                                <FFUploadedFile>[];
+                                          if (selectedMedia != null && selectedMedia.every((m) => validateFileFormat(m.storagePath, context))) {
+                                            setState(() => _model.isDataUploading3 = true);
+                                            var selectedUploadedFiles = <FFUploadedFile>[];
 
                                             var downloadUrls = <String>[];
                                             try {
@@ -1451,56 +1194,37 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                                 'Uploading file...',
                                                 showLoading: true,
                                               );
-                                              selectedUploadedFiles =
-                                                  selectedMedia
-                                                      .map(
-                                                          (m) => FFUploadedFile(
-                                                                name: m
-                                                                    .storagePath
-                                                                    .split('/')
-                                                                    .last,
-                                                                bytes: m.bytes,
-                                                                height: m
-                                                                    .dimensions
-                                                                    ?.height,
-                                                                width: m
-                                                                    .dimensions
-                                                                    ?.width,
-                                                                blurHash:
-                                                                    m.blurHash,
-                                                              ))
-                                                      .toList();
+                                              selectedUploadedFiles = selectedMedia
+                                                  .map((m) => FFUploadedFile(
+                                                        name: m.storagePath.split('/').last,
+                                                        bytes: m.bytes,
+                                                        height: m.dimensions?.height,
+                                                        width: m.dimensions?.width,
+                                                        blurHash: m.blurHash,
+                                                      ))
+                                                  .toList();
 
                                               downloadUrls = (await Future.wait(
                                                 selectedMedia.map(
-                                                  (m) async => await uploadData(
-                                                      m.storagePath, m.bytes),
+                                                  (m) async => await uploadData(m.storagePath, m.bytes),
                                                 ),
                                               ))
                                                   .where((u) => u != null)
                                                   .map((u) => u!)
                                                   .toList();
                                             } finally {
-                                              ScaffoldMessenger.of(context)
-                                                  .hideCurrentSnackBar();
+                                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                               _model.isDataUploading3 = false;
                                             }
-                                            if (selectedUploadedFiles.length ==
-                                                    selectedMedia.length &&
-                                                downloadUrls.length ==
-                                                    selectedMedia.length) {
+                                            if (selectedUploadedFiles.length == selectedMedia.length && downloadUrls.length == selectedMedia.length) {
                                               setState(() {
-                                                _model.uploadedLocalFile3 =
-                                                    selectedUploadedFiles.first;
-                                                _model.uploadedFileUrl3 =
-                                                    downloadUrls.first;
+                                                _model.uploadedLocalFile3 = selectedUploadedFiles.first;
+                                                _model.uploadedFileUrl3 = downloadUrls.first;
                                               });
-                                              showUploadMessage(
-                                                  context, 'Success!');
+                                              showUploadMessage(context, 'Success!');
                                             } else {
                                               setState(() {});
-                                              showUploadMessage(context,
-                                                  'Failed to upload data');
+                                              showUploadMessage(context, 'Failed to upload data');
                                               return;
                                             }
                                           }
@@ -1508,38 +1232,25 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                         text: 'upload da foto',
                                         options: FFButtonOptions(
                                           height: 40.0,
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  24.0, 0.0, 24.0, 0.0),
-                                          iconPadding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 0.0, 0.0),
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          textStyle: FlutterFlowTheme.of(
-                                                  context)
-                                              .titleSmall
-                                              .override(
+                                          padding: const EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                                          iconPadding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                          color: FlutterFlowTheme.of(context).primary,
+                                          textStyle: FlutterFlowTheme.of(context).titleSmall.override(
                                                 fontFamily: 'Inter',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
+                                                color: FlutterFlowTheme.of(context).primaryText,
                                                 letterSpacing: 0.0,
                                               ),
                                           elevation: 3.0,
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color: FlutterFlowTheme.of(context).primaryText,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                       ),
                                     ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 10.0, 0.0, 0.0),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
                                     child: FFButtonWidget(
                                       onPressed: () async {
                                         final selectedMedia = await selectMedia(
@@ -1547,14 +1258,9 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                           mediaSource: MediaSource.photoGallery,
                                           multiImage: false,
                                         );
-                                        if (selectedMedia != null &&
-                                            selectedMedia.every((m) =>
-                                                validateFileFormat(
-                                                    m.storagePath, context))) {
-                                          setState(() =>
-                                              _model.isDataUploading4 = true);
-                                          var selectedUploadedFiles =
-                                              <FFUploadedFile>[];
+                                        if (selectedMedia != null && selectedMedia.every((m) => validateFileFormat(m.storagePath, context))) {
+                                          setState(() => _model.isDataUploading4 = true);
+                                          var selectedUploadedFiles = <FFUploadedFile>[];
 
                                           var downloadUrls = <String>[];
                                           try {
@@ -1563,51 +1269,37 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                               'Uploading file...',
                                               showLoading: true,
                                             );
-                                            selectedUploadedFiles =
-                                                selectedMedia
-                                                    .map((m) => FFUploadedFile(
-                                                          name: m.storagePath
-                                                              .split('/')
-                                                              .last,
-                                                          bytes: m.bytes,
-                                                          height: m.dimensions
-                                                              ?.height,
-                                                          width: m.dimensions
-                                                              ?.width,
-                                                          blurHash: m.blurHash,
-                                                        ))
-                                                    .toList();
+                                            selectedUploadedFiles = selectedMedia
+                                                .map((m) => FFUploadedFile(
+                                                      name: m.storagePath.split('/').last,
+                                                      bytes: m.bytes,
+                                                      height: m.dimensions?.height,
+                                                      width: m.dimensions?.width,
+                                                      blurHash: m.blurHash,
+                                                    ))
+                                                .toList();
 
                                             downloadUrls = (await Future.wait(
                                               selectedMedia.map(
-                                                (m) async => await uploadData(
-                                                    m.storagePath, m.bytes),
+                                                (m) async => await uploadData(m.storagePath, m.bytes),
                                               ),
                                             ))
                                                 .where((u) => u != null)
                                                 .map((u) => u!)
                                                 .toList();
                                           } finally {
-                                            ScaffoldMessenger.of(context)
-                                                .hideCurrentSnackBar();
+                                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                             _model.isDataUploading4 = false;
                                           }
-                                          if (selectedUploadedFiles.length ==
-                                                  selectedMedia.length &&
-                                              downloadUrls.length ==
-                                                  selectedMedia.length) {
+                                          if (selectedUploadedFiles.length == selectedMedia.length && downloadUrls.length == selectedMedia.length) {
                                             setState(() {
-                                              _model.uploadedLocalFile4 =
-                                                  selectedUploadedFiles.first;
-                                              _model.uploadedFileUrl4 =
-                                                  downloadUrls.first;
+                                              _model.uploadedLocalFile4 = selectedUploadedFiles.first;
+                                              _model.uploadedFileUrl4 = downloadUrls.first;
                                             });
-                                            showUploadMessage(
-                                                context, 'Success!');
+                                            showUploadMessage(context, 'Success!');
                                           } else {
                                             setState(() {});
-                                            showUploadMessage(context,
-                                                'Failed to upload data');
+                                            showUploadMessage(context, 'Failed to upload data');
                                             return;
                                           }
                                         }
@@ -1615,36 +1307,25 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                       text: 'upload da foto',
                                       options: FFButtonOptions(
                                         height: 40.0,
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            24.0, 0.0, 24.0, 0.0),
-                                        iconPadding:
-                                            EdgeInsetsDirectional.fromSTEB(
-                                                0.0, 0.0, 0.0, 0.0),
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        textStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .override(
+                                        padding: const EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                                        iconPadding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                        color: FlutterFlowTheme.of(context).primary,
+                                        textStyle: FlutterFlowTheme.of(context).titleSmall.override(
                                               fontFamily: 'Inter',
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryText,
+                                              color: FlutterFlowTheme.of(context).primaryText,
                                               letterSpacing: 0.0,
                                             ),
                                         elevation: 3.0,
                                         borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
+                                          color: FlutterFlowTheme.of(context).primaryText,
                                           width: 1.0,
                                         ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
+                                        borderRadius: BorderRadius.circular(8.0),
                                       ),
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 10.0, 0.0, 0.0),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
                                     child: FFButtonWidget(
                                       onPressed: () async {
                                         await actions.gerarPdfConteudoDinamico(
@@ -1663,40 +1344,35 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                       text: 'gerar pdf',
                                       options: FFButtonOptions(
                                         height: 40.0,
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            24.0, 0.0, 24.0, 0.0),
-                                        iconPadding:
-                                            EdgeInsetsDirectional.fromSTEB(
-                                                0.0, 0.0, 0.0, 0.0),
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        textStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .override(
+                                        padding: const EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                                        iconPadding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                        color: FlutterFlowTheme.of(context).primary,
+                                        textStyle: FlutterFlowTheme.of(context).titleSmall.override(
                                               fontFamily: 'Inter',
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryText,
+                                              color: FlutterFlowTheme.of(context).primaryText,
                                               letterSpacing: 0.0,
                                             ),
                                         elevation: 3.0,
                                         borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
+                                          color: FlutterFlowTheme.of(context).primaryText,
                                           width: 1.0,
                                         ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
+                                        borderRadius: BorderRadius.circular(8.0),
                                       ),
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 10.0, 0.0, 0.0),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
                                     child: FFButtonWidget(
                                       onPressed: () async {
+                                        final bytes = await printService.print(keyWidgetToImage: _globalKey);
                                         await actions.downloadFromBytes(
-                                          widget!.uploadedFile,
+                                          FFUploadedFile(
+                                            name: 'teste.png',
+                                            bytes: bytes,
+                                            height: 200,
+                                            width: 200,
+                                          ),
                                           _model.textController3.text,
                                           _model.uploadedFileUrl4,
                                         );
@@ -1704,38 +1380,26 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                       text: 'gerar pdf 2',
                                       options: FFButtonOptions(
                                         height: 40.0,
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            24.0, 0.0, 24.0, 0.0),
-                                        iconPadding:
-                                            EdgeInsetsDirectional.fromSTEB(
-                                                0.0, 0.0, 0.0, 0.0),
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        textStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .override(
+                                        padding: const EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                                        iconPadding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                        color: FlutterFlowTheme.of(context).primary,
+                                        textStyle: FlutterFlowTheme.of(context).titleSmall.override(
                                               fontFamily: 'Inter',
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryText,
+                                              color: FlutterFlowTheme.of(context).primaryText,
                                               letterSpacing: 0.0,
                                             ),
                                         elevation: 3.0,
                                         borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
+                                          color: FlutterFlowTheme.of(context).primaryText,
                                           width: 1.0,
                                         ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
+                                        borderRadius: BorderRadius.circular(8.0),
                                       ),
                                     ),
                                   ),
-                                  if (FFAppState().catainerimagee ==
-                                      _model.container)
+                                  if (FFAppState().catainerimagee == _model.container)
                                     Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          8.0, 10.0, 8.0, 0.0),
+                                      padding: const EdgeInsetsDirectional.fromSTEB(8.0, 10.0, 8.0, 0.0),
                                       child: TextFormField(
                                         controller: _model.textController2,
                                         focusNode: _model.textFieldFocusNode2,
@@ -1743,77 +1407,53 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                         obscureText: false,
                                         decoration: InputDecoration(
                                           labelText: 'Nome do falecido',
-                                          labelStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .override(
-                                                    fontFamily: 'Inter',
-                                                    letterSpacing: 0.0,
-                                                  ),
-                                          hintStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .override(
-                                                    fontFamily: 'Inter',
-                                                    letterSpacing: 0.0,
-                                                  ),
+                                          labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
+                                                fontFamily: 'Inter',
+                                                letterSpacing: 0.0,
+                                              ),
+                                          hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
+                                                fontFamily: 'Inter',
+                                                letterSpacing: 0.0,
+                                              ),
                                           enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryText,
+                                              color: FlutterFlowTheme.of(context).primaryText,
                                               width: 1.0,
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
+                                            borderRadius: BorderRadius.circular(8.0),
                                           ),
                                           focusedBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryText,
+                                              color: FlutterFlowTheme.of(context).primaryText,
                                               width: 1.0,
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
+                                            borderRadius: BorderRadius.circular(8.0),
                                           ),
                                           errorBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .error,
+                                              color: FlutterFlowTheme.of(context).error,
                                               width: 1.0,
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
+                                            borderRadius: BorderRadius.circular(8.0),
                                           ),
-                                          focusedErrorBorder:
-                                              OutlineInputBorder(
+                                          focusedErrorBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .error,
+                                              color: FlutterFlowTheme.of(context).error,
                                               width: 1.0,
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
+                                            borderRadius: BorderRadius.circular(8.0),
                                           ),
                                         ),
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
+                                        style: FlutterFlowTheme.of(context).bodyMedium.override(
                                               fontFamily: 'Inter',
                                               letterSpacing: 0.0,
                                             ),
                                         maxLines: null,
-                                        validator: _model
-                                            .textController2Validator
-                                            .asValidator(context),
+                                        validator: _model.textController2Validator.asValidator(context),
                                       ),
                                     ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        8.0, 10.0, 8.0, 0.0),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(8.0, 10.0, 8.0, 0.0),
                                     child: TextFormField(
                                       controller: _model.textController3,
                                       focusNode: _model.textFieldFocusNode3,
@@ -1821,70 +1461,54 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                       obscureText: false,
                                       decoration: InputDecoration(
                                         labelText: 'Nome do falecido',
-                                        labelStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
+                                        labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
                                               fontFamily: 'Inter',
                                               letterSpacing: 0.0,
                                             ),
-                                        hintStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
+                                        hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
                                               fontFamily: 'Inter',
                                               letterSpacing: 0.0,
                                             ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color: FlutterFlowTheme.of(context).primaryText,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color: FlutterFlowTheme.of(context).primaryText,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         errorBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
+                                            color: FlutterFlowTheme.of(context).error,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         focusedErrorBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
+                                            color: FlutterFlowTheme.of(context).error,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                       ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
+                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
                                             fontFamily: 'Inter',
                                             letterSpacing: 0.0,
                                           ),
                                       textAlign: TextAlign.center,
                                       maxLines: 2,
-                                      validator: _model.textController3Validator
-                                          .asValidator(context),
+                                      validator: _model.textController3Validator.asValidator(context),
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        8.0, 10.0, 8.0, 0.0),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(8.0, 10.0, 8.0, 0.0),
                                     child: TextFormField(
                                       controller: _model.textController4,
                                       focusNode: _model.textFieldFocusNode4,
@@ -1892,68 +1516,52 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                       obscureText: false,
                                       decoration: InputDecoration(
                                         labelText: 'Apelido',
-                                        labelStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
+                                        labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
                                               fontFamily: 'Inter',
                                               letterSpacing: 0.0,
                                             ),
-                                        hintStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
+                                        hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
                                               fontFamily: 'Inter',
                                               letterSpacing: 0.0,
                                             ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color: FlutterFlowTheme.of(context).primaryText,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color: FlutterFlowTheme.of(context).primaryText,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         errorBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
+                                            color: FlutterFlowTheme.of(context).error,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         focusedErrorBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
+                                            color: FlutterFlowTheme.of(context).error,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                       ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
+                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
                                             fontFamily: 'Inter',
                                             letterSpacing: 0.0,
                                           ),
-                                      validator: _model.textController4Validator
-                                          .asValidator(context),
+                                      validator: _model.textController4Validator.asValidator(context),
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        8.0, 10.0, 8.0, 0.0),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(8.0, 10.0, 8.0, 0.0),
                                     child: TextFormField(
                                       controller: _model.textController5,
                                       focusNode: _model.textFieldFocusNode5,
@@ -1961,68 +1569,52 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                       obscureText: false,
                                       decoration: InputDecoration(
                                         labelText: 'NASC',
-                                        labelStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
+                                        labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
                                               fontFamily: 'Inter',
                                               letterSpacing: 0.0,
                                             ),
-                                        hintStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
+                                        hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
                                               fontFamily: 'Inter',
                                               letterSpacing: 0.0,
                                             ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color: FlutterFlowTheme.of(context).primaryText,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color: FlutterFlowTheme.of(context).primaryText,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         errorBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
+                                            color: FlutterFlowTheme.of(context).error,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         focusedErrorBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
+                                            color: FlutterFlowTheme.of(context).error,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                       ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
+                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
                                             fontFamily: 'Inter',
                                             letterSpacing: 0.0,
                                           ),
-                                      validator: _model.textController5Validator
-                                          .asValidator(context),
+                                      validator: _model.textController5Validator.asValidator(context),
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        8.0, 10.0, 8.0, 0.0),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(8.0, 10.0, 8.0, 0.0),
                                     child: TextFormField(
                                       controller: _model.textController6,
                                       focusNode: _model.textFieldFocusNode6,
@@ -2030,68 +1622,52 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                       obscureText: false,
                                       decoration: InputDecoration(
                                         labelText: 'FALEC',
-                                        labelStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
+                                        labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
                                               fontFamily: 'Inter',
                                               letterSpacing: 0.0,
                                             ),
-                                        hintStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
+                                        hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
                                               fontFamily: 'Inter',
                                               letterSpacing: 0.0,
                                             ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color: FlutterFlowTheme.of(context).primaryText,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color: FlutterFlowTheme.of(context).primaryText,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         errorBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
+                                            color: FlutterFlowTheme.of(context).error,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         focusedErrorBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
+                                            color: FlutterFlowTheme.of(context).error,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                       ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
+                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
                                             fontFamily: 'Inter',
                                             letterSpacing: 0.0,
                                           ),
-                                      validator: _model.textController6Validator
-                                          .asValidator(context),
+                                      validator: _model.textController6Validator.asValidator(context),
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        8.0, 10.0, 8.0, 0.0),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(8.0, 10.0, 8.0, 0.0),
                                     child: TextFormField(
                                       controller: _model.textController7,
                                       focusNode: _model.textFieldFocusNode7,
@@ -2099,69 +1675,53 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                       obscureText: false,
                                       decoration: InputDecoration(
                                         labelText: 'Local',
-                                        labelStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
+                                        labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
                                               fontFamily: 'Inter',
                                               letterSpacing: 0.0,
                                             ),
                                         hintText: 'CENTRO | CAMPO BELO',
-                                        hintStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
+                                        hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
                                               fontFamily: 'Inter',
                                               letterSpacing: 0.0,
                                             ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color: FlutterFlowTheme.of(context).primaryText,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color: FlutterFlowTheme.of(context).primaryText,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         errorBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
+                                            color: FlutterFlowTheme.of(context).error,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         focusedErrorBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
+                                            color: FlutterFlowTheme.of(context).error,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                       ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
+                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
                                             fontFamily: 'Inter',
                                             letterSpacing: 0.0,
                                           ),
-                                      validator: _model.textController7Validator
-                                          .asValidator(context),
+                                      validator: _model.textController7Validator.asValidator(context),
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        8.0, 10.0, 8.0, 0.0),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(8.0, 10.0, 8.0, 0.0),
                                     child: TextFormField(
                                       controller: _model.textController8,
                                       focusNode: _model.textFieldFocusNode8,
@@ -2169,70 +1729,54 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                       obscureText: false,
                                       decoration: InputDecoration(
                                         labelText: 'FAMILIARES',
-                                        labelStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
+                                        labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
                                               fontFamily: 'Inter',
                                               letterSpacing: 0.0,
                                             ),
-                                        hintStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
+                                        hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
                                               fontFamily: 'Inter',
                                               letterSpacing: 0.0,
                                             ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color: FlutterFlowTheme.of(context).primaryText,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color: FlutterFlowTheme.of(context).primaryText,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         errorBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
+                                            color: FlutterFlowTheme.of(context).error,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         focusedErrorBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
+                                            color: FlutterFlowTheme.of(context).error,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                       ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
+                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
                                             fontFamily: 'Inter',
                                             letterSpacing: 0.0,
                                           ),
                                       textAlign: TextAlign.center,
                                       maxLines: 4,
-                                      validator: _model.textController8Validator
-                                          .asValidator(context),
+                                      validator: _model.textController8Validator.asValidator(context),
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        8.0, 10.0, 8.0, 0.0),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(8.0, 10.0, 8.0, 0.0),
                                     child: TextFormField(
                                       controller: _model.textController9,
                                       focusNode: _model.textFieldFocusNode9,
@@ -2240,70 +1784,54 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                       obscureText: false,
                                       decoration: InputDecoration(
                                         labelText: 'VELÓRIO',
-                                        labelStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
+                                        labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
                                               fontFamily: 'Inter',
                                               letterSpacing: 0.0,
                                             ),
-                                        hintStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
+                                        hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
                                               fontFamily: 'Inter',
                                               letterSpacing: 0.0,
                                             ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color: FlutterFlowTheme.of(context).primaryText,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color: FlutterFlowTheme.of(context).primaryText,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         errorBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
+                                            color: FlutterFlowTheme.of(context).error,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         focusedErrorBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
+                                            color: FlutterFlowTheme.of(context).error,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                       ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
+                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
                                             fontFamily: 'Inter',
                                             letterSpacing: 0.0,
                                           ),
                                       textAlign: TextAlign.center,
                                       maxLines: 3,
-                                      validator: _model.textController9Validator
-                                          .asValidator(context),
+                                      validator: _model.textController9Validator.asValidator(context),
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        8.0, 10.0, 8.0, 0.0),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(8.0, 10.0, 8.0, 0.0),
                                     child: TextFormField(
                                       controller: _model.textController10,
                                       focusNode: _model.textFieldFocusNode10,
@@ -2311,73 +1839,55 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                       obscureText: false,
                                       decoration: InputDecoration(
                                         labelText: 'SEPULTAMENTO',
-                                        labelStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
+                                        labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
                                               fontFamily: 'Inter',
                                               letterSpacing: 0.0,
                                             ),
-                                        hintStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
+                                        hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
                                               fontFamily: 'Inter',
                                               letterSpacing: 0.0,
                                             ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color: FlutterFlowTheme.of(context).primaryText,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color: FlutterFlowTheme.of(context).primaryText,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         errorBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
+                                            color: FlutterFlowTheme.of(context).error,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                         focusedErrorBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .error,
+                                            color: FlutterFlowTheme.of(context).error,
                                             width: 1.0,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                          borderRadius: BorderRadius.circular(8.0),
                                         ),
                                       ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
+                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
                                             fontFamily: 'Inter',
                                             letterSpacing: 0.0,
                                           ),
                                       textAlign: TextAlign.center,
                                       maxLines: 3,
-                                      validator: _model
-                                          .textController10Validator
-                                          .asValidator(context),
+                                      validator: _model.textController10Validator.asValidator(context),
                                     ),
                                   ),
-                                  if (FFAppState().catainerimagee ==
-                                      _model.container)
+                                  if (FFAppState().catainerimagee == _model.container)
                                     Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          8.0, 10.0, 8.0, 0.0),
+                                      padding: const EdgeInsetsDirectional.fromSTEB(8.0, 10.0, 8.0, 0.0),
                                       child: TextFormField(
                                         controller: _model.textController11,
                                         focusNode: _model.textFieldFocusNode11,
@@ -2385,79 +1895,54 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                         obscureText: false,
                                         decoration: InputDecoration(
                                           labelText: 'Local',
-                                          labelStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .override(
-                                                    fontFamily: 'Inter',
-                                                    letterSpacing: 0.0,
-                                                  ),
+                                          labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
+                                                fontFamily: 'Inter',
+                                                letterSpacing: 0.0,
+                                              ),
                                           hintText: 'CENTRO | CAMPO BELO',
-                                          hintStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .override(
-                                                    fontFamily: 'Inter',
-                                                    letterSpacing: 0.0,
-                                                  ),
+                                          hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
+                                                fontFamily: 'Inter',
+                                                letterSpacing: 0.0,
+                                              ),
                                           enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryText,
+                                              color: FlutterFlowTheme.of(context).primaryText,
                                               width: 1.0,
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
+                                            borderRadius: BorderRadius.circular(8.0),
                                           ),
                                           focusedBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryText,
+                                              color: FlutterFlowTheme.of(context).primaryText,
                                               width: 1.0,
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
+                                            borderRadius: BorderRadius.circular(8.0),
                                           ),
                                           errorBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .error,
+                                              color: FlutterFlowTheme.of(context).error,
                                               width: 1.0,
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
+                                            borderRadius: BorderRadius.circular(8.0),
                                           ),
-                                          focusedErrorBorder:
-                                              OutlineInputBorder(
+                                          focusedErrorBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .error,
+                                              color: FlutterFlowTheme.of(context).error,
                                               width: 1.0,
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
+                                            borderRadius: BorderRadius.circular(8.0),
                                           ),
                                         ),
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
+                                        style: FlutterFlowTheme.of(context).bodyMedium.override(
                                               fontFamily: 'Inter',
                                               letterSpacing: 0.0,
                                             ),
-                                        validator: _model
-                                            .textController11Validator
-                                            .asValidator(context),
+                                        validator: _model.textController11Validator.asValidator(context),
                                       ),
                                     ),
-                                  if (FFAppState().catainerimagee ==
-                                      _model.container)
+                                  if (FFAppState().catainerimagee == _model.container)
                                     Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          8.0, 10.0, 8.0, 0.0),
+                                      padding: const EdgeInsetsDirectional.fromSTEB(8.0, 10.0, 8.0, 0.0),
                                       child: TextFormField(
                                         controller: _model.textController12,
                                         focusNode: _model.textFieldFocusNode12,
@@ -2465,74 +1950,51 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                         obscureText: false,
                                         decoration: InputDecoration(
                                           labelText: 'Descrição',
-                                          labelStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .override(
-                                                    fontFamily: 'Inter',
-                                                    letterSpacing: 0.0,
-                                                  ),
+                                          labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
+                                                fontFamily: 'Inter',
+                                                letterSpacing: 0.0,
+                                              ),
                                           hintText: 'decrição',
-                                          hintStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .override(
-                                                    fontFamily: 'Inter',
-                                                    letterSpacing: 0.0,
-                                                  ),
+                                          hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
+                                                fontFamily: 'Inter',
+                                                letterSpacing: 0.0,
+                                              ),
                                           enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryText,
+                                              color: FlutterFlowTheme.of(context).primaryText,
                                               width: 1.0,
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
+                                            borderRadius: BorderRadius.circular(8.0),
                                           ),
                                           focusedBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryText,
+                                              color: FlutterFlowTheme.of(context).primaryText,
                                               width: 1.0,
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
+                                            borderRadius: BorderRadius.circular(8.0),
                                           ),
                                           errorBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .error,
+                                              color: FlutterFlowTheme.of(context).error,
                                               width: 1.0,
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
+                                            borderRadius: BorderRadius.circular(8.0),
                                           ),
-                                          focusedErrorBorder:
-                                              OutlineInputBorder(
+                                          focusedErrorBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .error,
+                                              color: FlutterFlowTheme.of(context).error,
                                               width: 1.0,
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
+                                            borderRadius: BorderRadius.circular(8.0),
                                           ),
                                         ),
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
+                                        style: FlutterFlowTheme.of(context).bodyMedium.override(
                                               fontFamily: 'Inter',
                                               letterSpacing: 0.0,
                                             ),
                                         maxLines: null,
                                         minLines: 3,
-                                        validator: _model
-                                            .textController12Validator
-                                            .asValidator(context),
+                                        validator: _model.textController12Validator.asValidator(context),
                                       ),
                                     ),
                                 ],
@@ -2542,8 +2004,7 @@ class _NovopostWidgetState extends State<NovopostWidget>
                         ),
                       if (FFAppState().catainerimagee == _model.container)
                         Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              8.0, 10.0, 8.0, 0.0),
+                          padding: const EdgeInsetsDirectional.fromSTEB(8.0, 10.0, 8.0, 0.0),
                           child: TextFormField(
                             controller: _model.textController13,
                             focusNode: _model.textFieldFocusNode13,
@@ -2551,30 +2012,24 @@ class _NovopostWidgetState extends State<NovopostWidget>
                             obscureText: false,
                             decoration: InputDecoration(
                               labelText: 'Apelido',
-                              labelStyle: FlutterFlowTheme.of(context)
-                                  .labelMedium
-                                  .override(
+                              labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
                                     fontFamily: 'Inter',
                                     letterSpacing: 0.0,
                                   ),
-                              hintStyle: FlutterFlowTheme.of(context)
-                                  .labelMedium
-                                  .override(
+                              hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
                                     fontFamily: 'Inter',
                                     letterSpacing: 0.0,
                                   ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
+                                  color: FlutterFlowTheme.of(context).primaryText,
                                   width: 1.0,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
+                                  color: FlutterFlowTheme.of(context).primaryText,
                                   width: 1.0,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
@@ -2594,26 +2049,21 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                             ),
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
+                            style: FlutterFlowTheme.of(context).bodyMedium.override(
                                   fontFamily: 'Inter',
                                   letterSpacing: 0.0,
                                 ),
-                            validator: _model.textController13Validator
-                                .asValidator(context),
+                            validator: _model.textController13Validator.asValidator(context),
                           ),
                         ),
                       Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 15.0, 0.0, 10.0),
+                        padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 10.0),
                         child: Stack(
                           children: [
                             Align(
-                              alignment: AlignmentDirectional(0.0, -7.07),
+                              alignment: const AlignmentDirectional(0.0, -7.07),
                               child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 15.0, 0.0, 15.0),
+                                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 15.0),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.max,
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -2621,66 +2071,45 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                     Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
-                                        if (FFAppState().location == null ||
-                                            FFAppState().location == '')
+                                        if (FFAppState().location == '')
                                           Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 16.0),
+                                            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
                                             child: InkWell(
                                               splashColor: Colors.transparent,
                                               focusColor: Colors.transparent,
                                               hoverColor: Colors.transparent,
-                                              highlightColor:
-                                                  Colors.transparent,
+                                              highlightColor: Colors.transparent,
                                               onTap: () async {
                                                 context.pushNamed(
                                                   'Location',
                                                   extra: <String, dynamic>{
-                                                    kTransitionInfoKey:
-                                                        TransitionInfo(
+                                                    kTransitionInfoKey: const TransitionInfo(
                                                       hasTransition: true,
-                                                      transitionType:
-                                                          PageTransitionType
-                                                              .bottomToTop,
+                                                      transitionType: PageTransitionType.bottomToTop,
                                                     ),
                                                   },
                                                 );
                                               },
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
                                                   Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(15.0, 0.0,
-                                                                0.0, 0.0),
+                                                    padding: const EdgeInsetsDirectional.fromSTEB(15.0, 0.0, 0.0, 0.0),
                                                     child: Text(
                                                       'Adicionar localização',
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
+                                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                             fontFamily: 'Inter',
                                                             fontSize: 14.0,
                                                             letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal,
+                                                            fontWeight: FontWeight.normal,
                                                           ),
                                                     ),
                                                   ),
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 0.0,
-                                                                15.0, 0.0),
+                                                  const Padding(
+                                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 15.0, 0.0),
                                                     child: Icon(
-                                                      Icons
-                                                          .arrow_forward_ios_rounded,
+                                                      Icons.arrow_forward_ios_rounded,
                                                       color: Color(0x80000000),
                                                       size: 18.0,
                                                     ),
@@ -2689,93 +2118,61 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                               ),
                                             ),
                                           ),
-                                        if (FFAppState().location != null &&
-                                            FFAppState().location != '')
+                                        if (FFAppState().location != '')
                                           Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 16.0),
+                                            padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
                                             child: InkWell(
                                               splashColor: Colors.transparent,
                                               focusColor: Colors.transparent,
                                               hoverColor: Colors.transparent,
-                                              highlightColor:
-                                                  Colors.transparent,
+                                              highlightColor: Colors.transparent,
                                               onTap: () async {
                                                 context.pushNamed(
                                                   'CallToAction',
                                                   extra: <String, dynamic>{
-                                                    kTransitionInfoKey:
-                                                        TransitionInfo(
+                                                    kTransitionInfoKey: const TransitionInfo(
                                                       hasTransition: true,
-                                                      transitionType:
-                                                          PageTransitionType
-                                                              .bottomToTop,
+                                                      transitionType: PageTransitionType.bottomToTop,
                                                     ),
                                                   },
                                                 );
                                               },
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
                                                   Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(15.0, 0.0,
-                                                                0.0, 0.0),
+                                                    padding: const EdgeInsetsDirectional.fromSTEB(15.0, 0.0, 0.0, 0.0),
                                                     child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
+                                                      mainAxisSize: MainAxisSize.max,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         Text(
                                                           FFAppState().location,
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Inter',
+                                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                fontFamily: 'Inter',
                                                                 fontSize: 14.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
+                                                                letterSpacing: 0.0,
+                                                                fontWeight: FontWeight.w600,
                                                               ),
                                                         ),
                                                       ],
                                                     ),
                                                   ),
                                                   Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 0.0,
-                                                                15.0, 0.0),
+                                                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 15.0, 0.0),
                                                     child: InkWell(
-                                                      splashColor:
-                                                          Colors.transparent,
-                                                      focusColor:
-                                                          Colors.transparent,
-                                                      hoverColor:
-                                                          Colors.transparent,
-                                                      highlightColor:
-                                                          Colors.transparent,
+                                                      splashColor: Colors.transparent,
+                                                      focusColor: Colors.transparent,
+                                                      hoverColor: Colors.transparent,
+                                                      highlightColor: Colors.transparent,
                                                       onTap: () async {
-                                                        FFAppState().location =
-                                                            '';
-                                                        FFAppState()
-                                                            .update(() {});
+                                                        FFAppState().location = '';
+                                                        FFAppState().update(() {});
                                                       },
-                                                      child: Icon(
+                                                      child: const Icon(
                                                         Icons.close_rounded,
-                                                        color:
-                                                            Color(0x80000000),
+                                                        color: Color(0x80000000),
                                                         size: 18.0,
                                                       ),
                                                     ),
@@ -2790,17 +2187,14 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                 ),
                               ),
                             ),
-                            if (isWeb
-                                ? MediaQuery.viewInsetsOf(context).bottom > 0
-                                : _isKeyboardVisible)
+                            if (isWeb ? MediaQuery.viewInsetsOf(context).bottom > 0 : _isKeyboardVisible)
                               Container(
                                 width: double.infinity,
                                 height: MediaQuery.sizeOf(context).height * 1.0,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: Color(0xC0000000),
                                 ),
-                              ).animateOnPageLoad(animationsMap[
-                                  'containerOnPageLoadAnimation']!),
+                              ).animateOnPageLoad(animationsMap['containerOnPageLoadAnimation']!),
                           ],
                         ),
                       ),
