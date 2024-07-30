@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "663896034114",
+    "firebase_url": "https://nota-de-falecimento-default-rtdb.firebaseio.com",
+    "project_id": "nota-de-falecimento",
+    "storage_bucket": "nota-de-falecimento.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:663896034114:android:b84a9b00a0581445f516db",
+        "android_client_info": {
+          "package_name": "com.nots.falecimento"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "663896034114-ruj5ebm6v0q7krti94o5q1eg902e2qp9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5LqWV0SK1EMozNiYwdY9F0Zh5CjQBavs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "663896034114-ruj5ebm6v0q7krti94o5q1eg902e2qp9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "663896034114-02fvc0195vlpe9cff3f76uvieg3dhhro.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sem.catalogo"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

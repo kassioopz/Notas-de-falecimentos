@@ -1,0 +1,1 @@
+ /Users/eduardomuniz/projects/Notas-de-falecimentos/.dart_tool/flutter_build/9a836524c27a18f6f132bb2b0f85dcc9/native_assets.yaml: 
