@@ -167,7 +167,6 @@ class _AvisosWidgetState extends State<AvisosWidget> {
                               }
                               List<UsersRecord> videoPlayerUsersRecordList =
                                   snapshot.data!;
-
                               // Return an empty Container when the item does not exist.
                               if (snapshot.data!.isEmpty) {
                                 return Container();
@@ -176,6 +175,7 @@ class _AvisosWidgetState extends State<AvisosWidget> {
                                   videoPlayerUsersRecordList.isNotEmpty
                                       ? videoPlayerUsersRecordList.first
                                       : null;
+
                               return FlutterFlowVideoPlayer(
                                 path: videoPlayerUsersRecord!.videos,
                                 videoType: VideoType.network,

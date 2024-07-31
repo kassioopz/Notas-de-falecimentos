@@ -177,11 +177,11 @@ class _FollowerComponantWidgetState extends State<FollowerComponantWidget> {
                         }
                         List<FollowersRecord> containerFollowersRecordList =
                             snapshot.data!;
-
                         final containerFollowersRecord =
                             containerFollowersRecordList.isNotEmpty
                                 ? containerFollowersRecordList.first
                                 : null;
+
                         return InkWell(
                           splashColor: Colors.transparent,
                           focusColor: Colors.transparent,

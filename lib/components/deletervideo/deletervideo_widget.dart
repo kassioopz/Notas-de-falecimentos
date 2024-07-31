@@ -182,7 +182,6 @@ class _DeletervideoWidgetState extends State<DeletervideoWidget> {
                           }
                           List<VideosRecord> containerVideosRecordList =
                               snapshot.data!;
-
                           // Return an empty Container when the item does not exist.
                           if (snapshot.data!.isEmpty) {
                             return Container();
@@ -191,6 +190,7 @@ class _DeletervideoWidgetState extends State<DeletervideoWidget> {
                               containerVideosRecordList.isNotEmpty
                                   ? containerVideosRecordList.first
                                   : null;
+
                           return Container(
                             width: double.infinity,
                             decoration: BoxDecoration(

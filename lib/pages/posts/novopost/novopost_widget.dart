@@ -237,7 +237,6 @@ class _NovopostWidgetState extends State<NovopostWidget>
                             }
                             List<PostsRecord> textPostsRecordList =
                                 snapshot.data!;
-
                             // Return an empty Container when the item does not exist.
                             if (snapshot.data!.isEmpty) {
                               return Container();
@@ -246,6 +245,7 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                 textPostsRecordList.isNotEmpty
                                     ? textPostsRecordList.first
                                     : null;
+
                             return InkWell(
                               splashColor: Colors.transparent,
                               focusColor: Colors.transparent,

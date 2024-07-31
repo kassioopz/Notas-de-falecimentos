@@ -202,11 +202,11 @@ class _PostOptionsWidgetState extends State<PostOptionsWidget> {
                                   List<BookmarksRecord>
                                       containerBookmarksRecordList =
                                       snapshot.data!;
-
                                   final containerBookmarksRecord =
                                       containerBookmarksRecordList.isNotEmpty
                                           ? containerBookmarksRecordList.first
                                           : null;
+
                                   return InkWell(
                                     splashColor: Colors.transparent,
                                     focusColor: Colors.transparent,

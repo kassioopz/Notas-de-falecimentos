@@ -708,11 +708,11 @@ class _PostWidgetState extends State<PostWidget> {
                               }
                               List<BookmarksRecord>
                                   containerBookmarksRecordList = snapshot.data!;
-
                               final containerBookmarksRecord =
                                   containerBookmarksRecordList.isNotEmpty
                                       ? containerBookmarksRecordList.first
                                       : null;
+
                               return InkWell(
                                 splashColor: Colors.transparent,
                                 focusColor: Colors.transparent,

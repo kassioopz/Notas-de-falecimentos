@@ -162,7 +162,6 @@ class _PerfilusuarioWidgetState extends State<PerfilusuarioWidget>
                         );
                       }
                       List<UsersRecord> columnUsersRecordList = snapshot.data!;
-
                       // Return an empty Container when the item does not exist.
                       if (snapshot.data!.isEmpty) {
                         return Container();
@@ -170,6 +169,7 @@ class _PerfilusuarioWidgetState extends State<PerfilusuarioWidget>
                       final columnUsersRecord = columnUsersRecordList.isNotEmpty
                           ? columnUsersRecordList.first
                           : null;
+
                       return SingleChildScrollView(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -557,7 +557,6 @@ class _PerfilusuarioWidgetState extends State<PerfilusuarioWidget>
                                               List<ChatsRecord>
                                                   messageButton1ChatsRecordList =
                                                   snapshot.data!;
-
                                               // Return an empty Container when the item does not exist.
                                               if (snapshot.data!.isEmpty) {
                                                 return Container();
@@ -568,6 +567,7 @@ class _PerfilusuarioWidgetState extends State<PerfilusuarioWidget>
                                                       ? messageButton1ChatsRecordList
                                                           .first
                                                       : null;
+
                                               return InkWell(
                                                 splashColor: Colors.transparent,
                                                 focusColor: Colors.transparent,

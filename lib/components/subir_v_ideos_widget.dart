@@ -161,7 +161,6 @@ class _SubirVIdeosWidgetState extends State<SubirVIdeosWidget> {
                         }
                         List<UsersRecord> videoPlayerUsersRecordList =
                             snapshot.data!;
-
                         // Return an empty Container when the item does not exist.
                         if (snapshot.data!.isEmpty) {
                           return Container();
@@ -170,6 +169,7 @@ class _SubirVIdeosWidgetState extends State<SubirVIdeosWidget> {
                             videoPlayerUsersRecordList.isNotEmpty
                                 ? videoPlayerUsersRecordList.first
                                 : null;
+
                         return FlutterFlowVideoPlayer(
                           path: _model.uploadedFileUrl,
                           videoType: VideoType.network,

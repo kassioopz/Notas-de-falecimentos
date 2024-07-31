@@ -298,11 +298,11 @@ class _SignUpUsernameConfirmationWidgetState
                           List<AdministrativeRecord>
                               signUpButtonAdministrativeRecordList =
                               snapshot.data!;
-
                           final signUpButtonAdministrativeRecord =
                               signUpButtonAdministrativeRecordList.isNotEmpty
                                   ? signUpButtonAdministrativeRecordList.first
                                   : null;
+
                           return FFButtonWidget(
                             onPressed: () async {
                               GoRouter.of(context).prepareAuthEvent();

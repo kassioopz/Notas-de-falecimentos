@@ -145,11 +145,11 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                       }
                       List<AdministrativeRecord> textAdministrativeRecordList =
                           snapshot.data!;
-
                       final textAdministrativeRecord =
                           textAdministrativeRecordList.isNotEmpty
                               ? textAdministrativeRecordList.first
                               : null;
+
                       return InkWell(
                         splashColor: Colors.transparent,
                         focusColor: Colors.transparent,

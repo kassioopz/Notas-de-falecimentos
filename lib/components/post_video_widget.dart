@@ -347,11 +347,11 @@ class _PostVideoWidgetState extends State<PostVideoWidget> {
                               }
                               List<BookmarksRecord>
                                   containerBookmarksRecordList = snapshot.data!;
-
                               final containerBookmarksRecord =
                                   containerBookmarksRecordList.isNotEmpty
                                       ? containerBookmarksRecordList.first
                                       : null;
+
                               return Container(
                                 height: 80.0,
                                 decoration: BoxDecoration(

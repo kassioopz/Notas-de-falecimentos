@@ -1097,7 +1097,6 @@ class _MeuperfilWidgetState extends State<MeuperfilWidget>
                                             List<BookmarksRecord>
                                                 bookmarkedPhotosBookmarksRecordList =
                                                 snapshot.data!;
-
                                             // Return an empty Container when the item does not exist.
                                             if (snapshot.data!.isEmpty) {
                                               return Container();
@@ -1108,6 +1107,7 @@ class _MeuperfilWidgetState extends State<MeuperfilWidget>
                                                     ? bookmarkedPhotosBookmarksRecordList
                                                         .first
                                                     : null;
+
                                             return Builder(
                                               builder: (context) {
                                                 final bookmarkedposts =
