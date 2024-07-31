@@ -1694,12 +1694,8 @@ class _NovopostWidgetState extends State<NovopostWidget>
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         0.0, 10.0, 0.0, 0.0),
                                     child: FFButtonWidget(
-                                      onPressed: () async {
-                                        await actions.downloadFromBytes(
-                                          widget!.uploadedFile,
-                                          _model.textController3.text,
-                                          _model.uploadedFileUrl4,
-                                        );
+                                      onPressed: () {
+                                        print('Button pressed ...');
                                       },
                                       text: 'gerar pdf 2',
                                       options: FFButtonOptions(
